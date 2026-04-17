@@ -19,20 +19,22 @@ jobs:
         with:
           php-version: '8.3'
 
-      - name: Instalar Dependencias (El equivalente a composer update/install)
+      - name: Instalar Dependencias
         run: composer install --prefer-dist --no-progress
 
-      - name: Crear archivo .env
-        run: cp .env.example .env
+      - name: Crear .env desde cero
+        run: |
+          touch .env
+          echo "APP_ENV=testing" >> .env
+          echo "APP_KEY=" >> .env
+          echo "DB_CONNECTION=sqlite" >> .env
+          echo "DB_DATABASE=:memory:" >> .env
 
-      - name: Generar Key de la App
+      - name: Generar Key
         run: php artisan key:generate
 
       - name: Ejecutar Pruebas
         run: php artisan test
-        env:
-          DB_CONNECTION: sqlite
-          DB_DATABASE: ":memory:"
 
   build-and-push:
     needs: test
