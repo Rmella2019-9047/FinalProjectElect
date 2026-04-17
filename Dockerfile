@@ -16,6 +16,9 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 WORKDIR /var/www
 COPY . .
 
+RUN mkdir -p storage/framework/views storage/framework/cache storage/framework/sessions bootstrap/cache
+RUN chmod -R 777 storage bootstrap/cache
+
 RUN composer install --no-dev --optimize-autoloader
 
 EXPOSE 9000
